@@ -1,5 +1,8 @@
 // Exercise 1 & 4
-function sayHello() {
+function sayHello(name) {
+  if (name) {
+    return `Hello ${name}`;
+  }
   return "Hello world!!";
 }
 

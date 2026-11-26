@@ -25,14 +25,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: 'DemoTesting/package-lock.json'
+          cache-dependency-path: 'demoTesting/package-lock.json'
 
-      # Step 3: Clean install dependencies inside DemoTesting
+      # Step 3: Clean install dependencies inside demoTesting
       - name: Install dependencies
-        working-directory: ./DemoTesting
+        working-directory: ./demoTesting
         run: npm ci
 
-      # Step 4: Run the automated tests inside DemoTesting
+      # Step 4: Run the automated tests inside demoTesting
       - name: Run tests
-        working-directory: ./DemoTesting
+        working-directory: ./demoTesting
         run: npm test

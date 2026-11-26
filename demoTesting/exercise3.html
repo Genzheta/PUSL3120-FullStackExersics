@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Session 6 - Exercise 3: Calculator</title>
+  <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
+  <style>
+    /* Slide 31 specifications */
+    #calculator {
+      width: 150px;
+      background-color: #2dfdFD; /* Note: slide has #2dfdFDF (typo in slide, fixed to hex #2dfdfd) */
+      padding: 5px;
+      overflow: hidden;
+    }
+    #calculator input {
+      width: 50px;
+      float: left;
+      margin: 5px;
+    }
+
+    /* Slide 33: styling required to pass the UI tests */
+    #result {
+      background-color: #ffffff;
+      font-size: 20px;
+      margin: 5px 0;
+      padding: 4px;
+    }
+
+    #calculator button {
+      margin: 5px;
+      padding: 4px 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Slide 31: Calculator HTML structure -->
+  <div id="calculator">
+    <p id="result">0.00</p>
+    <input id="number1" /><input id="number2" />
+    <button id="btnAdd">Add</button>
+    <button id="btnMul">Mul</button>
+  </div>
+
+  <div id="mocha"></div>
+
+  <!-- Mocha and Chai 4.3.8 -->
+  <script src="https://unpkg.com/mocha/mocha.js"></script>
+  <script src="https://unpkg.com/chai@4.3.8/chai.js"></script>
+
+  <script>
+    mocha.setup("tdd");
+    const assert = chai.assert;
+
+    // Helper function to trigger clicks
+    function clickElement(element) {
+      const event = new MouseEvent("click", {
+        view: window,
+        bubbles: true,
+        cancelable: true
+      });
+      element.dispatchEvent(event);
+    }
+
+    // Helper function to convert rgb(r, g, b) to hex (#rrggbb) for CSS testing
+    function rgb2hex(rgb) {
+      if (!rgb || rgb.startsWith("#")) return rgb;
+      const rgbValues = rgb.match(/\d+/g);
+      if (!rgbValues || rgbValues.length < 3) return rgb;
+      return "#" + rgbValues.slice(0, 3).map(x => {
+        const hex = parseInt(x).toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+      }).join("");
+    }
+
+    // -------------------------------------------------------------
+    // Core Calculator Math Functions
+    // -------------------------------------------------------------
+    function sum(a, b) {
+      return Number(a) + Number(b);
+    }
+
+    function product(a, b) {
+      return Number(a) * Number(b);
+    }
+
+    // -------------------------------------------------------------
+    // UI Event Handlers
+    // -------------------------------------------------------------
+    const input1 = document.getElementById("number1");
+    const input2 = document.getElementById("number2");
+    const btnAdd = document.getElementById("btnAdd");
+    const btnMul = document.getElementById("btnMul");
+    const resultP = document.getElementById("result");
+
+    btnAdd.addEventListener("click", function() {
+      const val1 = parseFloat(input1.value) || 0;
+      const val2 = parseFloat(input2.value) || 0;
+      resultP.textContent = sum(val1, val2);
+    });
+
+    btnMul.addEventListener("click", function() {
+      const val1 = parseFloat(input1.value) || 0;
+      const val2 = parseFloat(input2.value) || 0;
+      resultP.textContent = product(val1, val2);
+    });
+
+    // -------------------------------------------------------------
+    // Slide 32: Calculator Math Tests Suite
+    // -------------------------------------------------------------
+    suite("Calculator suite", function() {
+      suiteSetup(function() {
+        self.x = [1, 2, 3, 4, 5];
+        self.y = [2, 4, 6, 8, 10];
+      });
+
+      test("sum function should return the correct sum for each pair", function() {
+        for (let i = 0; i < self.x.length; i++) {
+          const expected = self.x[i] + self.y[i];
+          const actual = sum(self.x[i], self.y[i]);
+          assert.equal(actual, expected, `Failed summing ${self.x[i]} + ${self.y[i]}`);
+        }
+      });
+
+      test("product function should return the correct product for each pair", function() {
+        for (let i = 0; i < self.x.length; i++) {
+          const expected = self.x[i] * self.y[i];
+          const actual = product(self.x[i], self.y[i]);
+          assert.equal(actual, expected, `Failed multiplying ${self.x[i]} * ${self.y[i]}`);
+        }
+      });
+    });
+
+    // -------------------------------------------------------------
+    // Slide 33: Calculator UI Tests Suite
+    // -------------------------------------------------------------
+    suite("Calculator UI suite", function() {
+
+      // Slide 33: Teardown method to reset input values and result paragraph
+      teardown(function() {
+        input1.value = "";
+        input2.value = "";
+        resultP.textContent = "0.00";
+      });
+
+      test("result paragraph should have background #ffffff and font-size 20px", function() {
+        const computedStyle = window.getComputedStyle(resultP);
+        const bgHex = rgb2hex(computedStyle.backgroundColor);
+        const fontSize = computedStyle.fontSize;
+
+        assert.equal(bgHex.toLowerCase(), "#ffffff", "Result background should be #ffffff");
+        assert.equal(fontSize, "20px", "Result font-size should be 20px");
+      });
+
+      test("sum button click should add input values and update #result", function() {
+        input1.value = "12";
+        input2.value = "8";
+        clickElement(btnAdd);
+        assert.equal(resultP.textContent, "20", "Result should display 20 after adding 12 + 8");
+      });
+
+      test("multiply button click should multiply input values and update #result", function() {
+        input1.value = "7";
+        input2.value = "6";
+        clickElement(btnMul);
+        assert.equal(resultP.textContent, "42", "Result should display 42 after multiplying 7 * 6");
+      });
+    });
+
+    mocha.run();
+  </script>
+</body>
+</html>

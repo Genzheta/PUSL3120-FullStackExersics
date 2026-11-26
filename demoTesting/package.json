@@ -1,0 +1,19 @@
+{
+  "name": "session6-testing",
+  "version": "1.0.0",
+  "description": "Session 6 Testing exercises",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "mocha -u tdd test/ --exit"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "chai": "^4.4.1",
+    "chai-http": "^4.4.0",
+    "mocha": "^10.4.0",
+    "sinon": "^17.0.1"
+  }
+}

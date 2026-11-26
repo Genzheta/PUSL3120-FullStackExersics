@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Session 6 - Exercise 1: sayHello</title>
+  <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
+</head>
+<body>
+  <div id="mocha"></div>
+
+  <!-- Mocha and Chai v4.3.8 as per slide specifications -->
+  <script src="https://unpkg.com/mocha/mocha.js"></script>
+  <script src="https://unpkg.com/chai@4.3.8/chai.js"></script>
+
+  <script>
+    mocha.setup("tdd");
+    const assert = chai.assert;
+
+    // clickElement utility helper
+    function clickElement(element) {
+      const event = new MouseEvent("click", {
+        view: window,
+        bubbles: true,
+        cancelable: true
+      });
+      element.dispatchEvent(event);
+    }
+
+    // Implementation of sayHello
+    function sayHello(name) {
+      return "Hello " + name;
+    }
+
+    // Unit test suite for sayHello
+    suite("Exercise 1: sayHello Unit Tests", function() {
+      test("should return 'Hello Mark' when passed 'Mark'", function() {
+        const inputName = "Mark";
+        const expected = "Hello Mark";
+        const actual = sayHello(inputName);
+        assert.equal(actual, expected, "sayHello did not return the expected greeting");
+      });
+
+      test("should return 'Hello Alice' when passed 'Alice'", function() {
+        const inputName = "Alice";
+        const expected = "Hello Alice";
+        const actual = sayHello(inputName);
+        assert.equal(actual, expected);
+      });
+    });
+
+    mocha.run();
+  </script>
+</body>
+</html>

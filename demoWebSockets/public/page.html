@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Handshake</title>
+  <!-- Socket.io and jQuery CDN -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <h2>Handshake</h2>
+  <ul id="messages"></ul>
+
+  <script>
+    function appendMessage(msg) {
+      $('#messages').append($('<li>').text(msg));
+    }
+
+    window.onload = function() {
+      // Connect to the socket server
+      const socket = io("http://localhost:9000");
+
+      socket.on("confirm connection", function(msg) {
+        appendMessage(msg);
+      });
+
+      socket.on("response", function(msg) {
+        appendMessage(msg);
+      });
+
+      // Emit request after connection
+      socket.emit("request", "Hello from the client");
+    };
+  </script>
+</body>
+</html>

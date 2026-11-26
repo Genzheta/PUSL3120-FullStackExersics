@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Session 6 - Exercise 2: Display Message in Page</title>
+  <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
+</head>
+<body>
+  <!-- UI Components for Exercise 2 -->
+  <div id="app">
+    <input type="text" id="nameInput" placeholder="Enter your name" />
+    <button id="btnGreet">Greet</button>
+    <p id="message"></p>
+  </div>
+
+  <div id="mocha"></div>
+
+  <!-- Mocha and Chai 4.3.8 -->
+  <script src="https://unpkg.com/mocha/mocha.js"></script>
+  <script src="https://unpkg.com/chai@4.3.8/chai.js"></script>
+
+  <script>
+    mocha.setup("tdd");
+    const assert = chai.assert;
+
+    // Helper function to simulate button clicks
+    function clickElement(element) {
+      const event = new MouseEvent("click", {
+        view: window,
+        bubbles: true,
+        cancelable: true
+      });
+      element.dispatchEvent(event);
+    }
+
+    // -------------------------------------------------------------
+    // Core function from Exercise 1
+    // -------------------------------------------------------------
+    function sayHello(name) {
+      return "Hello " + name;
+    }
+
+    // -------------------------------------------------------------
+    // Event listener implementation for Exercise 2
+    // -------------------------------------------------------------
+    const inputElement = document.getElementById("nameInput");
+    const buttonElement = document.getElementById("btnGreet");
+    const messageElement = document.getElementById("message");
+
+    buttonElement.addEventListener("click", function() {
+      const name = inputElement.value;
+      messageElement.textContent = sayHello(name);
+    });
+
+    // -------------------------------------------------------------
+    // Test Suite
+    // -------------------------------------------------------------
+    suite("Exercise 2: UI sayHello Tests", function() {
+
+      // Teardown hook to reset DOM state after each test (Independence)
+      teardown(function() {
+        inputElement.value = "";
+        messageElement.textContent = "";
+      });
+
+      test("should display 'Hello Mark' in the message element when button is clicked", function() {
+        // 1. Assign value to the text box
+        inputElement.value = "Mark";
+
+        // 2. Click the button using clickElement
+        clickElement(buttonElement);
+
+        // 3. Assert the message is inserted into the page
+        assert.equal(messageElement.textContent, "Hello Mark", "Message paragraph should contain 'Hello Mark'");
+      });
+
+      test("should display 'Hello Sarah' for a different name", function() {
+        inputElement.value = "Sarah";
+        clickElement(buttonElement);
+        assert.equal(messageElement.textContent, "Hello Sarah");
+      });
+    });
+
+    mocha.run();
+  </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Notice Board</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    /* Styling per Slide 30 specifications */
+    #board {
+      width: 300px;
+      min-height: 500px;
+      border: 1px solid black;
+      padding: 10px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    .message {
+      width: 180px;
+      margin: 5px;
+      background-color: #F5FFAD;
+      padding: 6px;
+      border-radius: 4px;
+      word-wrap: break-word;
+    }
+    .sent {
+      margin-left: 115px;
+      background-color: #BEFF99;
+    }
+  </style>
+</head>
+<body>
+  <h2>Message board</h2>
+  <p>Message: <input type="text" id="msg" /></p>
+  <button id="send">Send</button>
+  <br/><br/>
+  <div id="board"></div>
+
+  <script>
+    const socket = io("http://localhost:9000");
+
+    // Handle messages broadcast from other clients
+    socket.on("received message", function(msg) {
+      const p = $('<p>').addClass('message').text(msg);
+      $('#board').append(p);
+    });
+
+    // Send message on button click
+    $('#send').on('click', function() {
+      const msg = $('#msg').val().trim();
+      if (msg) {
+        // Emit to server
+        socket.emit('send message', msg);
+
+        // Append locally as sent message
+        const p = $('<p>').addClass('message sent').text(msg);
+        $('#board').append(p);
+
+        // Clear input
+        $('#msg').val('');
+      }
+    });
+
+    // Optional: allow pressing Enter to send
+    $('#msg').on('keypress', function(e) {
+      if (e.which === 13) {
+        $('#send').click();
+      }
+    });
+  </script>
+</body>
+</html>

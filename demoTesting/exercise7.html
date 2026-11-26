@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Session 6 - Exercise 7: Extended Calculator</title>
+  <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
+  <style>
+    #calculator {
+      width: 220px;
+      background-color: #2dfdfd;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    #calculator input {
+      width: 70px;
+      margin: 4px;
+      padding: 4px;
+    }
+    #result {
+      background-color: #ffffff;
+      font-size: 20px;
+      margin: 5px 0;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .btn-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      margin-top: 8px;
+    }
+    button {
+      padding: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Extended Calculator UI -->
+  <div id="calculator">
+    <p id="result">0.00</p>
+    <div>
+      <input id="number1" placeholder="Num 1" />
+      <input id="number2" placeholder="Num 2" />
+    </div>
+    <div class="btn-group">
+      <button id="btnAdd">+</button>
+      <button id="btnSub">-</button>
+      <button id="btnMul">&times;</button>
+      <button id="btnDiv">&divide;</button>
+      <button id="btnPow">x^y</button>
+      <button id="btnRoot">&radic;</button>
+    </div>
+  </div>
+
+  <div id="mocha"></div>
+
+  <script src="https://unpkg.com/mocha/mocha.js"></script>
+  <script src="https://unpkg.com/chai@4.3.8/chai.js"></script>
+
+  <script>
+    mocha.setup("tdd");
+    const assert = chai.assert;
+
+    function clickElement(element) {
+      const event = new MouseEvent("click", {
+        view: window,
+        bubbles: true,
+        cancelable: true
+      });
+      element.dispatchEvent(event);
+    }
+
+    // Extended Math operations
+    const calc = {
+      add: (a, b) => Number(a) + Number(b),
+      sub: (a, b) => Number(a) - Number(b),
+      mul: (a, b) => Number(a) * Number(b),
+      div: (a, b) => (Number(b) === 0 ? "Error: Div/0" : Number(a) / Number(b)),
+      pow: (a, b) => Math.pow(Number(a), Number(b)),
+      root: (a, b) => Math.pow(Number(a), 1 / Number(b || 2))
+    };
+
+    // UI bindings
+    const num1 = document.getElementById("number1");
+    const num2 = document.getElementById("number2");
+    const res = document.getElementById("result");
+
+    document.getElementById("btnAdd").onclick = () => res.textContent = calc.add(num1.value, num2.value);
+    document.getElementById("btnSub").onclick = () => res.textContent = calc.sub(num1.value, num2.value);
+    document.getElementById("btnMul").onclick = () => res.textContent = calc.mul(num1.value, num2.value);
+    document.getElementById("btnDiv").onclick = () => res.textContent = calc.div(num1.value, num2.value);
+    document.getElementById("btnPow").onclick = () => res.textContent = calc.pow(num1.value, num2.value);
+    document.getElementById("btnRoot").onclick = () => res.textContent = calc.root(num1.value, num2.value);
+
+    // Test Suite for Extended Calculator UI
+    suite("Exercise 7: Extended Client-side Calculator Suite", function() {
+      teardown(function() {
+        num1.value = "";
+        num2.value = "";
+        res.textContent = "0.00";
+      });
+
+      test("subtraction button updates result", function() {
+        num1.value = "15";
+        num2.value = "7";
+        clickElement(document.getElementById("btnSub"));
+        assert.equal(res.textContent, "8");
+      });
+
+      test("division button updates result correctly", function() {
+        num1.value = "20";
+        num2.value = "4";
+        clickElement(document.getElementById("btnDiv"));
+        assert.equal(res.textContent, "5");
+      });
+
+      test("division by zero shows friendly error", function() {
+        num1.value = "10";
+        num2.value = "0";
+        clickElement(document.getElementById("btnDiv"));
+        assert.equal(res.textContent, "Error: Div/0");
+      });
+
+      test("power button computes x^y", function() {
+        num1.value = "2";
+        num2.value = "4";
+        clickElement(document.getElementById("btnPow"));
+        assert.equal(res.textContent, "16");
+      });
+
+      test("root button computes nth root", function() {
+        num1.value = "27";
+        num2.value = "3";
+        clickElement(document.getElementById("btnRoot"));
+        assert.equal(res.textContent, "3");
+      });
+    });
+
+    mocha.run();
+  </script>
+</body>
+</html>

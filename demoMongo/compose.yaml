@@ -1,0 +1,30 @@
+services:
+
+
+  frontend:
+    image: nginx
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    ports:
+      - "81:80"
+
+  backend:
+    image: node:26.12.0
+    volumes:
+      - ./backend:/usr/src/app:rw
+    ports:
+      - "82:9000"
+    working_dir: /usr/src/app
+    command: sh -c "
+      chmod +x run.sh &&
+      ./run.sh"
+    links:
+      - database
+
+  database:
+    image: mongo
+    ports:
+      - 83:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example

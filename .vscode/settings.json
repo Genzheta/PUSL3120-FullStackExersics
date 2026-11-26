@@ -1,0 +1,36 @@
+{
+    "folder-color.pathColors": [
+        {
+            "folderPath": "PUSL3120/demoDocker/",
+            "color": "foldercolorizer.color_0000ff"
+        },
+        {
+            "folderPath": "PUSL3120/demoajax/",
+            "color": "foldercolorizer.color_ff87d7"
+        },
+        {
+            "folderPath": "PUSL3120/demoMongo/",
+            "color": "foldercolorizer.color_00ff87"
+        },
+        {
+            "folderPath": "PUSL3120/demoFullStack/",
+            "color": "foldercolorizer.color_87d7af"
+        },
+        {
+            "folderPath": "PUSL3120/demoNode/",
+            "color": "foldercolorizer.color_d7ff00"
+        },
+        {
+            "folderPath": "PUSL3120/demoExpress/",
+            "color": "foldercolorizer.color_008080"
+        },
+        {
+            "folderPath": "PUSL3120/demoDice/",
+            "color": "foldercolorizer.color_5f00af"
+        },
+        {
+            "folderPath": "PUSL3120/demoTrains/",
+            "color": "foldercolorizer.color_00ffff"
+        }
+    ]
+}
